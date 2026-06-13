@@ -1,65 +1,152 @@
 import Image from "next/image";
+import Link from "next/link";
+import { FadeUp } from "@/components/fade-up";
+import { ProjectCard } from "@/components/project-card";
+import { experience } from "@/lib/experience";
+import { featuredProjects } from "@/lib/projects";
+import { site } from "@/lib/site";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="relative flex flex-col gap-20 py-16 sm:py-24">
+      {/* Hero backdrop */}
+      <div
+        aria-hidden
+        className="-z-10 pointer-events-none absolute inset-x-[-24rem] top-[-8rem] h-[34rem]"
+      >
+        <div className="bg-dots absolute inset-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_0%,rgba(255,255,255,0.06),transparent_70%)]" />
+      </div>
+
+      {/* Hero */}
+      <section className="flex flex-col gap-7">
+        <FadeUp className="flex items-center gap-5">
+          <Image
+            src="/headshot.png"
+            alt={site.name}
+            width={64}
+            height={64}
+            priority
+            className="rounded-full border border-edge-strong shadow-[0_0_24px_rgba(255,255,255,0.06)]"
+          />
+          <div>
+            <h1 className="text-gradient font-semibold text-3xl tracking-tight sm:text-4xl">
+              {site.name}
+            </h1>
+            <p className="mt-1 text-base text-muted sm:text-lg">{site.role}</p>
+          </div>
+        </FadeUp>
+
+        <FadeUp delay={0.08}>
+          <p className="max-w-xl text-base text-muted leading-relaxed">
+            I build production AI systems — from model deployment and RAG
+            pipelines to low-latency backends and cloud infrastructure. Computer
+            Science student at VCU.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+        </FadeUp>
+
+        <FadeUp delay={0.16}>
+          <p className="flex items-center gap-2 font-mono text-faint text-sm">
+            <span
+              aria-hidden
+              className="inline-block size-1.5 rounded-full bg-emerald-400"
             />
-            Deploy Now
-          </a>
+            {site.location}
+          </p>
+        </FadeUp>
+
+        <FadeUp delay={0.24} className="flex flex-wrap gap-3">
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href={site.resume}
             target="_blank"
             rel="noopener noreferrer"
+            className="rounded-md bg-foreground px-4 py-2 font-medium text-background text-sm transition-all hover:scale-[1.02] hover:opacity-90 active:scale-[0.98]"
           >
-            Documentation
+            Resume
           </a>
+          <a
+            href={site.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-edge-strong px-4 py-2 text-sm transition-all hover:border-faint hover:bg-surface hover:text-foreground"
+          >
+            GitHub
+          </a>
+          <a
+            href={site.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-edge-strong px-4 py-2 text-sm transition-all hover:border-faint hover:bg-surface hover:text-foreground"
+          >
+            LinkedIn
+          </a>
+          <a
+            href={`mailto:${site.email}`}
+            className="rounded-md border border-edge-strong px-4 py-2 text-sm transition-all hover:border-faint hover:bg-surface hover:text-foreground"
+          >
+            Email
+          </a>
+        </FadeUp>
+      </section>
+
+      {/* Featured projects */}
+      <section className="flex flex-col gap-5">
+        <FadeUp delay={0.32} className="flex items-baseline justify-between">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-faint text-xs">01</span>
+            <h2 className="font-semibold text-xl tracking-tight">
+              Featured Projects
+            </h2>
+          </div>
+          <Link
+            href="/projects"
+            className="link-underline text-muted text-sm transition-colors hover:text-foreground"
+          >
+            All projects →
+          </Link>
+        </FadeUp>
+        <div className="flex flex-col gap-4">
+          {featuredProjects.map((project, i) => (
+            <FadeUp key={project.slug} delay={0.4 + i * 0.08}>
+              <ProjectCard project={project} />
+            </FadeUp>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* Experience snapshot */}
+      <section className="flex flex-col gap-5">
+        <FadeUp delay={0.64} className="flex items-baseline justify-between">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-faint text-xs">02</span>
+            <h2 className="font-semibold text-xl tracking-tight">Experience</h2>
+          </div>
+          <Link
+            href="/experience"
+            className="link-underline text-muted text-sm transition-colors hover:text-foreground"
+          >
+            Full history →
+          </Link>
+        </FadeUp>
+        <FadeUp delay={0.72}>
+          <ul className="flex flex-col divide-y divide-edge">
+            {experience.map((role) => (
+              <li
+                key={`${role.company}-${role.period}`}
+                className="group flex flex-col gap-1 py-4 transition-colors sm:flex-row sm:items-baseline sm:justify-between"
+              >
+                <div>
+                  <p className="font-medium text-sm transition-colors group-hover:text-foreground">
+                    {role.company}
+                  </p>
+                  <p className="text-muted text-sm">{role.title}</p>
+                </div>
+                <p className="font-mono text-faint text-xs">{role.period}</p>
+              </li>
+            ))}
+          </ul>
+        </FadeUp>
+      </section>
     </div>
   );
 }
