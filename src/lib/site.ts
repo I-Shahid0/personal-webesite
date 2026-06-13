@@ -7,6 +7,6 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/ibrahim-shahid-288ab1360/",
   resume: "/resume.pdf",
   positioning:
-    "I build production AI systems — from model deployment and RAG pipelines to backend services and cloud infrastructure.",
+    "I build production-grade application systems. From model deployment and RAG pipelines to low-latency backends and cloud infrastructure.",
   url: "https://ishahid.pro",
 };
