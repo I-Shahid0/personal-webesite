@@ -12,7 +12,7 @@ export default function Home() {
       {/* Hero backdrop */}
       <div
         aria-hidden
-        className="-z-10 pointer-events-none absolute inset-x-[-24rem] top-[-8rem] h-[34rem]"
+        className="-z-10 pointer-events-none absolute -inset-x-96 -top-32 h-136"
       >
         <div className="bg-dots absolute inset-0" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_0%,rgba(255,255,255,0.06),transparent_70%)]" />
@@ -24,8 +24,8 @@ export default function Home() {
           <Image
             src="/headshot.png"
             alt={site.name}
-            width={64}
-            height={64}
+            width={104}
+            height={104}
             priority
             className="rounded-full border border-edge-strong shadow-[0_0_24px_rgba(255,255,255,0.06)]"
           />
