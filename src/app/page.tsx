@@ -39,7 +39,7 @@ export default function Home() {
 
         <FadeUp delay={0.08}>
           <p className="max-w-xl text-base text-muted leading-relaxed">
-            I build production AI systems — from model deployment and RAG
+            I build production-grade application systems. From model deployment and RAG
             pipelines to low-latency backends and cloud infrastructure. Computer
             Science student at VCU.
           </p>

@@ -1,3 +1,6 @@
+"use client";
+
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import type { DiagramLayer } from "@/lib/projects";
 
 export function Diagram({
@@ -7,28 +10,57 @@ export function Diagram({
   title: string;
   layers: DiagramLayer[];
 }) {
+  const ref = useRef<HTMLElement>(null);
+  const [live, setLive] = useState(false);
+
+  // Start the flow animation only once the diagram scrolls into view.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setLive(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setLive(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // A longer pipeline needs a longer cycle so the pulse can travel the whole
+  // way down before the next batch starts at the top.
+  const period = Math.max(2.6, (2 * layers.length - 1) * 0.42 + 1).toFixed(2);
+
   return (
-    <figure className="overflow-hidden rounded-lg border border-edge bg-surface">
-      <figcaption className="border-b border-edge px-4 py-2.5 font-mono text-faint text-xs uppercase tracking-wider">
-        {title}
+    <figure
+      ref={ref}
+      className={`diagram overflow-hidden rounded-lg border border-edge bg-surface ${
+        live ? "is-live" : ""
+      }`}
+      style={{ "--flow-period": `${period}s` } as CSSProperties}
+    >
+      <figcaption className="flex items-center justify-between border-b border-edge px-4 py-2.5 font-mono text-faint text-xs uppercase tracking-wider">
+        <span>{title}</span>
+        <span className="flex items-center gap-1.5 normal-case tracking-normal">
+          <span
+            aria-hidden
+            className="flow-status-dot inline-block size-1.5 rounded-full bg-emerald-400"
+          />
+          <span className="text-[10px] text-faint">live</span>
+        </span>
       </figcaption>
       <div className="flex flex-col items-stretch px-4 py-6 sm:px-8">
         {layers.map((layer, i) => (
           <div key={layer.nodes.map((n) => n.title).join("-")}>
             {i > 0 && (
-              <div className="flex flex-col items-center py-1">
-                <span className="font-mono text-edge-strong text-xs leading-none">
-                  │
-                </span>
-                {layer.edge && (
-                  <span className="my-1 rounded-sm bg-background px-2 py-0.5 font-mono text-[11px] text-faint">
-                    {layer.edge}
-                  </span>
-                )}
-                <span className="font-mono text-edge-strong text-xs leading-none">
-                  ▼
-                </span>
-              </div>
+              <Connector edge={layer.edge} phase={2 * i - 1} />
             )}
             <div className="relative">
               {layer.label && (
@@ -45,10 +77,11 @@ export function Diagram({
                     : ""
                 }`}
               >
-                {layer.nodes.map((node) => (
+                {layer.nodes.map((node, j) => (
                   <div
                     key={node.title}
-                    className="rounded-md border border-edge-strong bg-background px-4 py-3 text-center"
+                    className="flow-node rounded-md border border-edge-strong bg-background px-4 py-3 text-center"
+                    style={{ "--phase": 2 * i + j * 0.18 } as CSSProperties}
                   >
                     <p className="font-medium font-mono text-sm">
                       {node.title}
@@ -66,5 +99,22 @@ export function Diagram({
         ))}
       </div>
     </figure>
+  );
+}
+
+function Connector({ edge, phase }: { edge?: string; phase: number }) {
+  return (
+    <div
+      className="flow-connector"
+      style={{ "--phase": phase } as CSSProperties}
+    >
+      <span aria-hidden className="flow-rail">
+        <span className="flow-pulse" />
+      </span>
+      {edge && <span className="flow-edge-label">{edge}</span>}
+      <span aria-hidden className="flow-arrow">
+        ▼
+      </span>
+    </div>
   );
 }
